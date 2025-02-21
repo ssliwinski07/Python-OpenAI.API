@@ -5,8 +5,11 @@ from fastapi.responses import JSONResponse
 
 from api.users.users_api import UsersAPI
 from api.keys.api_key_api import ApiKeyApi
-from utils.models.routers.root.root_router import RootRouter
-from utils.models.errors.http_error_response import HttpErrorResponse
+from utils.models.routers.root.root_router_model import RootRouterModel
+from utils.models.errors.http_error_response_model import HttpErrorResponseModel
+from utils.helpers.enums import ServiceType
+from core.services.base.api_key_service_base import ApiKeyServiceBase
+from core.services.locator.service_locator import ServicesInjector
 
 
 class ApiServer:
@@ -22,7 +25,7 @@ class ApiServer:
     def setup_exception_handlers(self):
         @self.app.exception_handler(HTTPException)
         async def http_exception_handler(request: Request, exc: HTTPException):
-            error_response = HttpErrorResponse(
+            error_response = HttpErrorResponseModel(
                 code=exc.status_code,
                 detail=exc.detail,
             )
@@ -39,7 +42,7 @@ class ApiServer:
         if token != os.getenv("API_KEY"):
             raise HTTPException(status_code=401, detail="Invalid or missing API key")
 
-    def get_routers(self) -> RootRouter:
+    def get_routers(self) -> RootRouterModel:
         # private endpoints - use dependencies=[Depends(self.verify_api_key)] in APIRouter
         ### users router
         users_router: APIRouter = APIRouter(
@@ -52,15 +55,19 @@ class ApiServer:
             prefix="/keys",
         )
 
-        return RootRouter(
+        return RootRouterModel(
             users=users_router,
             api_key=api_key,
         )
 
-    def include_routers(self, routers: RootRouter) -> None:
+    def include_routers(self, routers: RootRouterModel) -> None:
         self.app.include_router(router=routers.users)
         self.app.include_router(router=routers.api_key)
 
-    def init_api(self, routers: RootRouter) -> None:
+    def init_api(self, routers: RootRouterModel) -> None:
+        injector_prod = ServicesInjector.injector(ServiceType.PROD)
+
         UsersAPI(router=routers.users)
-        ApiKeyApi(router=routers.api_key)
+        ApiKeyApi(
+            router=routers.api_key, api_key_service=injector_prod.get(ApiKeyServiceBase)
+        )

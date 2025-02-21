@@ -1,16 +1,19 @@
-import os
 from fastapi import APIRouter, HTTPException
+
+from core.services.base.api_key_service_base import ApiKeyServiceBase
+from utils.models.keys.api_key_model import ApiKeyModel
 
 
 class ApiKeyApi:
-    def __init__(self, router: APIRouter):
+    def __init__(self, router: APIRouter, api_key_service: ApiKeyServiceBase):
         self.router = router
         self.routes_setup()
+        self.api_key_service = api_key_service
 
     def routes_setup(self):
         @self.router.post("/", tags=["API keys"])
-        def get_api_key():
-            api_key = os.getenv("API_KEY")
-            if not api_key:
-                raise HTTPException(status_code=404, detail="API key not found")
-            return api_key
+        def get_api_key() -> ApiKeyModel:
+            try:
+                return self.api_key_service.get_api_key()
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=str(e)) from e

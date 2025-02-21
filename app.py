@@ -2,9 +2,13 @@ import uvicorn
 from fastapi import FastAPI
 
 from api.api_server import ApiServer
+from core.services.locator.service_locator import ServicesInjector
 
 
 def main():
+    # services initialization
+    ServicesInjector.init()
+
     api_server = ApiServer(
         fast_api=FastAPI(
             docs_url="/api",

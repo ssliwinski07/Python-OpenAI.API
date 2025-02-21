@@ -19,5 +19,6 @@ App was build using Python 3.12.2.
 # Other information
 
 1. API docs is available at `http://localhost:8040/api/docs`
-2. UsersAPI class and its methods were only created as a test to show how function `verify_api_key` from `ApiServer` works. If you want to fetch user data you need to pass user_id = 1, otherwise it will raise an expcetion that user not found.
-3. `verify_api_key` function checks if the API key passed in header API request is valid on the endpoints that are not public - those endpoints requires to pass authorization header with API key.
+2. UsersAPI class and its methods were only created as a test to show how function `verify_api_key` from `ApiServer` works.
+3. `verify_api_key` function checks if the API key passed in header API request is valid on the endpoints that are not public - those endpoints require to pass authorization header with API key.
+4. If you want to use `/users/{user_id}` endpoint from swagger you need to set `user_id = 1`, otherwise it will raise an exception that user was not found.

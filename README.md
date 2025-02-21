@@ -11,7 +11,7 @@ API server for testing OpenAI API - it's still in progress and new features are 
 
 App was build using Python 3.12.2.
 
-1. Create system environment variable API_KEY with your OpenAI API key - it's required for the app to work properly when checking the API key that is being send in API request.
+1. Create system environment variable `API_KEY` with your OpenAI API key - it's required for the app to work properly when checking the API key that is being send in API request.
 2. Run `pip install -r requirements.txt` to install dependencies.
 3. Run `python app.py` to start the app - it will run on localhost at port 8040.
 

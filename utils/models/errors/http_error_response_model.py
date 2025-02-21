@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 
-class HttpErrorResponse(BaseModel):
+class HttpErrorResponseModel(BaseModel):
     code: int
     detail: str

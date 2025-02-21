@@ -1,10 +1,10 @@
+import os
 from fastapi import FastAPI, APIRouter, HTTPException, Request, Depends, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import JSONResponse
-import os
 
-from core.api.routers.users.users_api import UsersAPI
-from core.api.routers.tokens.open_ai_token_api import OpenAITokenAPI
+from api.users.users_api import UsersAPI
+from api.keys.api_key_api import ApiKeyApi
 from utils.models.routers.root.root_router import RootRouter
 from utils.models.errors.http_error_response import HttpErrorResponse
 
@@ -18,10 +18,14 @@ class ApiServer:
         self.include_routers(routers=self.routers)
         self.setup_exception_handlers()
 
+    # pylint: disable=unused-argument
     def setup_exception_handlers(self):
         @self.app.exception_handler(HTTPException)
         async def http_exception_handler(request: Request, exc: HTTPException):
-            error_response = HttpErrorResponse(code=exc.status_code, detail=exc.detail)
+            error_response = HttpErrorResponse(
+                code=exc.status_code,
+                detail=exc.detail,
+            )
             return JSONResponse(
                 content=error_response.model_dump(),
                 status_code=exc.status_code,
@@ -36,12 +40,14 @@ class ApiServer:
             raise HTTPException(status_code=401, detail="Invalid or missing API key")
 
     def get_routers(self) -> RootRouter:
-        # users router
+        # private endpoints - use dependencies=[Depends(self.verify_api_key)] in APIRouter
+        ### users router
         users_router: APIRouter = APIRouter(
             prefix="/users", dependencies=[Depends(self.verify_api_key)]
         )
 
-        # acces token
+        # public endpoints
+        ### api key router
         api_key: APIRouter = APIRouter(
             prefix="/keys",
         )
@@ -57,4 +63,4 @@ class ApiServer:
 
     def init_api(self, routers: RootRouter) -> None:
         UsersAPI(router=routers.users)
-        OpenAITokenAPI(router=routers.api_key)
+        ApiKeyApi(router=routers.api_key)

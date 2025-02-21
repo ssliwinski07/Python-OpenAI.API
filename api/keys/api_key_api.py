@@ -1,8 +1,8 @@
-from fastapi import APIRouter, HTTPException
 import os
+from fastapi import APIRouter, HTTPException
 
 
-class OpenAITokenAPI:
+class ApiKeyApi:
     def __init__(self, router: APIRouter):
         self.router = router
         self.routes_setup()

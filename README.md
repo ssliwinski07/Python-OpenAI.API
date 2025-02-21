@@ -12,7 +12,7 @@ API server for testing OpenAI API - it's still in progress and new features are 
 
 App was build using Python 3.12.2.
 
-1. Create system environment variable `API_KEY` with your OpenAI API key - it's required for the app to work properly when checking the API key that is being sent in API request.
+1. Create system environment variable `API_KEY` with your OpenAI API key - it's required for the app to work properly when checking the API key that is being sent in http request.
 2. Run `pip install -r requirements.txt` to install dependencies.
 3. Run `python app.py` to start the app - it will run on localhost at port 8040.
 
@@ -20,7 +20,7 @@ App was build using Python 3.12.2.
 
 1. API docs is available at `http://localhost:8040/api`
 2. UsersAPI class and its methods were only created as a test to show how function `verify_api_key` from `ApiServer` works.
-3. `verify_api_key` function checks if the API key passed in header API request is valid on the endpoints that are not public - those endpoints require to pass authorization header with API key.
+3. `verify_api_key` function checks if the API key passed in the header of http request is valid on the endpoints that are not public - those endpoints require to pass authorization header with API key.
 4. If you want to use `/users/{user_id}` protected endpoint from swagger you need to:
    - authorize using API key fetched from `/keys/` endpoint
    - set `user_id = 1`, otherwise it will raise an exception that user was not found.

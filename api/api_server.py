@@ -1,15 +1,15 @@
 import os
-from fastapi import FastAPI, APIRouter, HTTPException, Request, Depends, Security
+from fastapi import FastAPI, HTTPException, Request, Depends, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import JSONResponse
+from fastapi.routing import APIRouter
 
-from api.users.users_api import UsersAPI
-from api.keys.api_key_api import ApiKeyApi
-from utils.models.routers.root.root_router_model import RootRouterModel
+from api.initializer.api_initializer import ApiInitializer
+from api.routes.routes_container import RoutesContainer
 from utils.models.errors.http_error_response_model import HttpErrorResponseModel
-from utils.helpers.enums import ServiceType
-from core.services.base.api_key_service_base import ApiKeyServiceBase
-from core.services.locator.service_locator import ServicesInjector
+from utils.models.routes.private_routes_model import PrivateRoutesModel
+from utils.models.routes.public_routes_model import PublicRoutesModel
+from utils.models.routes.routes_container_model import RoutesContainerModel
 
 
 class ApiServer:
@@ -42,32 +42,24 @@ class ApiServer:
         if token != os.getenv("API_KEY"):
             raise HTTPException(status_code=401, detail="Invalid or missing API key")
 
-    def get_routers(self) -> RootRouterModel:
-        # private endpoints - use dependencies=[Depends(self.verify_api_key)] in APIRouter
-        ### users router
-        users_router: APIRouter = APIRouter(
-            prefix="/users", dependencies=[Depends(self.verify_api_key)]
+    def get_routers(self) -> RoutesContainerModel:
+
+        private: PrivateRoutesModel = RoutesContainer.private_routes(
+            dependencies=[Depends(self.verify_api_key)]
         )
+        public: PublicRoutesModel = RoutesContainer.public_routes()
 
-        # public endpoints
-        ### api key router
-        api_key: APIRouter = APIRouter(
-            prefix="/keys",
-        )
+        return RoutesContainerModel(private=private, public=public)
 
-        return RootRouterModel(
-            users=users_router,
-            api_key=api_key,
-        )
+    def include_routers(self, routers: RoutesContainerModel) -> None:
 
-    def include_routers(self, routers: RootRouterModel) -> None:
-        self.app.include_router(router=routers.users)
-        self.app.include_router(router=routers.api_key)
+        for _, router in routers.private.__dict__.items():
+            if isinstance(router, APIRouter):
+                self.app.include_router(router=router)
 
-    def init_api(self, routers: RootRouterModel) -> None:
-        injector_prod = ServicesInjector.injector(ServiceType.PROD)
+        for _, router in routers.public.__dict__.items():
+            if isinstance(router, APIRouter):
+                self.app.include_router(router=router)
 
-        UsersAPI(router=routers.users)
-        ApiKeyApi(
-            router=routers.api_key, api_key_service=injector_prod.get(ApiKeyServiceBase)
-        )
+    def init_api(self, routers: RoutesContainerModel) -> None:
+        ApiInitializer(routers=routers).initialize()

@@ -21,13 +21,14 @@ def singleton(cls):
 @singleton
 class ServicesInjector:
 
-    def __init__(self):
+    def __init__(self, service_type: ServiceType):
         self.__injector: Injector = None
         self.__injector_mock: Injector = None
+        self.service_type: ServiceType = service_type
 
-    def injector(self, service_type: ServiceType) -> Injector:
+    def injector(self) -> Injector:
 
-        match service_type:
+        match self.service_type:
             case ServiceType.PROD:
                 return self.__injector
             case ServiceType.MOCK:

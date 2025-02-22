@@ -10,12 +10,14 @@ from utils.models.errors.http_error_response_model import HttpErrorResponseModel
 from utils.models.routes.private_routes_model import PrivateRoutesModel
 from utils.models.routes.public_routes_model import PublicRoutesModel
 from utils.models.routes.routes_container_model import RoutesContainerModel
+from core.services.locator.services_injector import ServicesInjector
 
 
 class ApiServer:
 
-    def __init__(self, fast_api: FastAPI):
+    def __init__(self, services_injector: ServicesInjector, fast_api: FastAPI):
         self.app = fast_api
+        self.services_injector = services_injector
         self.routers = self.get_routers()
         self.init_api(routers=self.routers)
         self.include_routers(routers=self.routers)
@@ -62,4 +64,6 @@ class ApiServer:
                 self.app.include_router(router=router)
 
     def init_api(self, routers: RoutesContainerModel) -> None:
-        ApiInitializer(routers=routers).initialize()
+        ApiInitializer(
+            routers=routers, services_injector=self.services_injector
+        ).initialize()

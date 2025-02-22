@@ -24,3 +24,4 @@ App was build using Python 3.12.2.
 4. If you want to use `/users/{user_id}` protected endpoint from swagger you need to:
    - authorize using API key fetched from `/keys/` endpoint
    - set `user_id = 1`, otherwise it will raise an exception that user was not found.
+5. To use mock dependencies and data `service_type = ServiceType.MOCK` in `app.py` file.

@@ -25,3 +25,5 @@ App was build using Python 3.12.2.
    - authorize using API key fetched from `/keys/` endpoint
    - set `user_id = 1`, otherwise it will raise an exception that user was not found.
 5. To use mock dependencies and data `service_type = ServiceType.MOCK` in `app.py` file.
+6. API app is localized to English by default - error messages are being translated. To change the language, change the `lang_code` parameter of `Localizations.lang_initialization(lang_code="...")` function in `app.py` file - to see changes you need to re-run the app. Supported languages codes: 'pl', 'es', 'en'. If you use unsupported language code, app will use default language.
+7. Localization was made by creating a custom class `Localizations`. I know I could use `gettext` module, but wanted to do this that way, since it's only test API app to show my coding skills.

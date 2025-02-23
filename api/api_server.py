@@ -10,6 +10,8 @@ from utils.models.errors.http_error_response_model import HttpErrorResponseModel
 from utils.models.routes.private_routes_model import PrivateRoutesModel
 from utils.models.routes.public_routes_model import PublicRoutesModel
 from utils.models.routes.routes_container_model import RoutesContainerModel
+from utils.messages import messages
+from core.localization.localizations import Localizations
 from core.services.locator.services_injector import ServicesInjector
 
 
@@ -42,7 +44,10 @@ class ApiServer:
     ) -> None:
         token = credentials.credentials
         if token != os.getenv("API_KEY"):
-            raise HTTPException(status_code=401, detail="Invalid or missing API key")
+            raise HTTPException(
+                status_code=401,
+                detail=Localizations.translate(msg=messages.INVALID_OR_MISSING_API_KEY),
+            )
 
     def get_routers(self) -> RoutesContainerModel:
 

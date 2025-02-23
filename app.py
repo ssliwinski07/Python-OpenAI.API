@@ -1,13 +1,21 @@
+import locale
 import uvicorn
-
 from fastapi import FastAPI
-from utils.helpers.enums import ServiceType
 
+from utils.helpers.enums import ServiceType
 from api.api_server import ApiServer
 from core.services.locator.services_injector import ServicesInjector
+from core.localization.localizations import Localizations
 
 
 def main():
+
+    # uncomment to get language code from system
+    # lang = locale.getlocale()[0][:2]
+
+    # localization initialization
+    Localizations.lang_initialization(lang_code="en")
+
     # use ServiceType.MOCK to run with mock dependencies and data
     # use ServiceType.PROD to run with production dependencies and data
 

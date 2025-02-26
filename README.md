@@ -27,11 +27,12 @@ App was build using Python 3.12.2.
    - authenticate using API key fetched from `/keys/` endpoint
    - set `user_id = 1`, otherwise it will raise an exception that user was not found.
 7. If you wany to use `/openai/` protected endpoint from swagger you need to authenticate using API key fetched from `/keys/` endpoint and pass:
+
    - message - message to send to OpenAI chat model
    - url - url of the chat model, for example 'https://api.deepseek.com'
    - model - name of the chat model, for example 'gpt-4'
 
-As a response you will get a list. You can find reply from the chat model in the `content` field of `message`
+   As a response you will get a list. You can find reply from the chat model in the `content` field of `message`
 
 8. To use mock dependencies and data `service_type = ServiceType.MOCK` in `app.py` file - no mock data for openAi services
 9. API app is localized to English by default - error messages are being translated. To change the language, change the `lang_code` parameter of `Localizations.lang_initialization(lang_code="...")` function in `app.py` file - to see changes you need to re-run the app. Supported languages codes: 'pl', 'es', 'en'. If you use unsupported language code, app will use default language.

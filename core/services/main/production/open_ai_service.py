@@ -53,7 +53,7 @@ class OpenAiService(OpenAiServiceBase):
 
             return response.choices
 
-        except tuple(OPEN_AI_ERRORS) as e:
+        except OPEN_AI_ERRORS as e:
             error_body = getattr(e, "body", str(e))
             error_status_code = getattr(e, "status_code", "-")
 

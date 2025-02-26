@@ -10,7 +10,10 @@ class RoutesContainer:
     @classmethod
     def private_routes(cls, dependencies: Sequence[Depends]) -> PrivateRoutesModel:
         users_router: APIRouter = APIRouter(prefix="/users", dependencies=dependencies)
-        return PrivateRoutesModel(users=users_router)
+        open_ai_router: APIRouter = APIRouter(
+            prefix="/openai", dependencies=dependencies
+        )
+        return PrivateRoutesModel(users=users_router, open_ai=open_ai_router)
 
     @classmethod
     def public_routes(

@@ -11,9 +11,9 @@ class ApiKeyApi:
         self.api_key_service = api_key_service
 
     def routes_setup(self):
-        @self.router.post("/", tags=["API keys"])
-        def get_api_key() -> ApiKeyModel:
+        @self.router.get("/", tags=["API keys"])
+        async def get_api_key() -> ApiKeyModel:
             try:
-                return self.api_key_service.get_api_key()
+                return await self.api_key_service.get_api_key()
             except Exception as e:
                 raise HTTPException(status_code=400, detail=str(e)) from e

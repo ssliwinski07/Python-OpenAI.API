@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException
 from typing import Optional
+from fastapi import APIRouter, HTTPException
 
 from utils.models.users.user_model import User
 from utils.messages import messages

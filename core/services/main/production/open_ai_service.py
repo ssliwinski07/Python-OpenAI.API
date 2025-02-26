@@ -23,9 +23,6 @@ class OpenAiService(OpenAiServiceBase):
             base_url=url,
         )
 
-        if not self.__openai_client:
-            raise ValueError("TEST_TEST_TEST")
-
         return self.__openai_client
 
     async def send_message(

@@ -28,10 +28,7 @@ def main():
 
     api_server: ApiServer = ApiServer(
         services_injector=services_injector,
-        fast_api=FastAPI(
-            docs_url="/api",
-            title="OpenAI.API",
-        ),
+        fast_api=FastAPI(docs_url="/docs", title="OpenAI.API", root_path="/api"),
     )
 
     # running uvicorn server programatically

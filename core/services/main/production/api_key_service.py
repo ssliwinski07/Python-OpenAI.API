@@ -11,7 +11,7 @@ from utils.helpers.consts import API_KEY
 @singleton
 class ApiKeyService(ApiKeyServiceBase):
 
-    def get_api_key(self) -> ApiKeyModel:
+    async def get_api_key(self) -> ApiKeyModel:
         try:
             api_key = os.getenv(API_KEY)
             if not api_key:

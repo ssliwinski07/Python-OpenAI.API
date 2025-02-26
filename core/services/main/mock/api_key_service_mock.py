@@ -7,5 +7,5 @@ from utils.models.keys.api_key_model import ApiKeyModel
 @singleton
 class ApiKeyServiceMock(ApiKeyServiceBase):
 
-    def get_api_key(self) -> ApiKeyModel:
+    async def get_api_key(self) -> ApiKeyModel:
         return ApiKeyModel(api_key="uk-124234xxvfqszcfteest")

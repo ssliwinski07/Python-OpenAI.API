@@ -1,6 +1,10 @@
 import os
 from fastapi import FastAPI, HTTPException, Request, Depends, Security
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import (
+    HTTPBearer,
+    HTTPAuthorizationCredentials,
+    OAuth2PasswordBearer,
+)
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
 
@@ -11,6 +15,7 @@ from utils.models.routes.private_routes_model import PrivateRoutesModel
 from utils.models.routes.public_routes_model import PublicRoutesModel
 from utils.models.routes.routes_container_model import RoutesContainerModel
 from utils.messages import messages
+from utils.helpers.consts import API_KEY
 from core.localization.localizations import Localizations
 from core.services.locator.services_injector import ServicesInjector
 
@@ -21,6 +26,7 @@ class ApiServer:
         self.app = fast_api
         self.services_injector = services_injector
         self.routers = self.get_routers()
+        self.oauth2 = OAuth2PasswordBearer(tokenUrl="token")
         self.init_api(routers=self.routers)
         self.include_routers(routers=self.routers)
         self.setup_exception_handlers()
@@ -43,7 +49,7 @@ class ApiServer:
         credentials: HTTPAuthorizationCredentials = Security(HTTPBearer()),
     ) -> None:
         token = credentials.credentials
-        if token != os.getenv("API_KEY"):
+        if token != os.getenv(API_KEY):
             raise HTTPException(
                 status_code=401,
                 detail=Localizations.translate(msg=messages.INVALID_OR_MISSING_API_KEY),

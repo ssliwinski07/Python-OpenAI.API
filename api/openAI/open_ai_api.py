@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Request
 from openai.types.chat.chat_completion import Choice
 
 from utils.models.open_ai.open_ai_send_message_model import OpenAISendMessageModel
+from utils.helpers.consts import DEFAULT_ERROR_CODE
 from core.exceptions.custom_exception.custom_exception import CustomException
 from core.services.base.open_ai_service_base import OpenAiServiceBase
 
@@ -31,4 +32,6 @@ class OpenAIAPI:
                 raise HTTPException(status_code=e.status_code, detail=e.message) from e
 
             except Exception as e:
-                raise HTTPException(status_code=400, detail=str(e)) from e
+                raise HTTPException(
+                    status_code=DEFAULT_ERROR_CODE, detail=str(e)
+                ) from e

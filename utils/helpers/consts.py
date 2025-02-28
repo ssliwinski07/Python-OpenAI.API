@@ -3,3 +3,6 @@ API_KEY = "API_KEY"
 
 # OpenAI roles
 USER_ROLE = "user"
+
+# ERRORS
+DEFAULT_ERROR_CODE = 500

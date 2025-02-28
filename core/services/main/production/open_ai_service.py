@@ -1,9 +1,10 @@
+import threading
 import openai
 from openai.types.chat import ChatCompletion, ChatCompletionUserMessageParam
 from openai.types.chat.chat_completion import Choice
 from injector import singleton
 
-from utils.helpers.consts import USER_ROLE
+from utils.helpers.consts import USER_ROLE, DEFAULT_ERROR_CODE
 from utils.helpers.openai_errors import OPEN_AI_ERRORS
 from utils.models.open_ai.open_ai_send_message_model import OpenAISendMessageModel
 from core.exceptions.custom_exception.custom_exception import CustomException
@@ -15,26 +16,25 @@ class OpenAiService(OpenAiServiceBase):
 
     def __init__(self):
         self.__openai_client: openai.OpenAI = None
+        self._lock = threading.Lock()
 
     def __initialize_openai_client(self, api_key: str, url: str):
-
         self.__openai_client: openai.OpenAI = openai.OpenAI(
             api_key=api_key,
             base_url=url,
         )
-
-        return self.__openai_client
 
     async def send_message(
         self, open_ai_send_message_model: OpenAISendMessageModel, api_key: str
     ) -> list[Choice]:
 
         try:
-            if not self.__openai_client:
-                self.__openai_client = self.__initialize_openai_client(
-                    api_key=api_key,
-                    url=open_ai_send_message_model.url,
-                )
+            with self._lock:
+                if not self.__openai_client:
+                    self.__initialize_openai_client(
+                        api_key=api_key,
+                        url=open_ai_send_message_model.url,
+                    )
 
             messages = [
                 ChatCompletionUserMessageParam(
@@ -51,14 +51,24 @@ class OpenAiService(OpenAiServiceBase):
             return response.choices
 
         except OPEN_AI_ERRORS as e:
-            error_body = getattr(e, "body", str(e))
-            error_status_code = getattr(e, "status_code", "-")
 
-            error_msg = (
-                f"Error message: {error_body['message']}. "
-                f"Error code: {error_body['code']} ({error_status_code})"
-                if "message" in error_body and "code" in error_body
-                else str(e)
+            # api key/url is being checked on the API call, not when the openai object is being created,
+            # so to handle the case when bad api key/url is provided, openai client should be reinitialized
+            # when one of the following errors occurs. It can be reinitialized only once self.__openai_client = None
+
+            if isinstance(
+                e,
+                (
+                    openai.APIConnectionError,
+                    openai.APIStatusError,
+                    openai.APITimeoutError,
+                ),
+            ):
+                self.__openai_client = None
+
+            error_msg: str = e.message if hasattr(e, "message") else str(e)
+            error_status_code: int = (
+                e.status_code if hasattr(e, "status_code") else DEFAULT_ERROR_CODE
             )
 
             raise CustomException(
@@ -66,4 +76,4 @@ class OpenAiService(OpenAiServiceBase):
             ) from e
 
         except Exception as e:
-            raise CustomException(message=str(e), status_code=400) from e
+            raise CustomException(message=str(e), status_code=DEFAULT_ERROR_CODE) from e

@@ -30,11 +30,12 @@ class OpenAiService(OpenAiServiceBase):
 
         try:
             with self._lock:
-                if not self.__openai_client:
-                    self.__initialize_openai_client(
-                        api_key=api_key,
-                        url=open_ai_send_message_model.url,
-                    )
+                # since openAI API is stateless it can be initialized at every HTTP request
+                # so no need to initialize it once and use the same client in all methods
+                self.__initialize_openai_client(
+                    api_key=api_key,
+                    url=open_ai_send_message_model.url,
+                )
 
             messages = [
                 ChatCompletionUserMessageParam(
@@ -51,20 +52,6 @@ class OpenAiService(OpenAiServiceBase):
             return response.choices
 
         except OPEN_AI_ERRORS as e:
-
-            # api key/url is being checked on the API call, not when the openai object is being created,
-            # so to handle the case when bad api key/url is provided, openai client should be reinitialized
-            # when one of the following errors occurs. It can be reinitialized only once self.__openai_client = None
-
-            if isinstance(
-                e,
-                (
-                    openai.APIConnectionError,
-                    openai.APIStatusError,
-                    openai.APITimeoutError,
-                ),
-            ):
-                self.__openai_client = None
 
             error_msg: str = e.message if hasattr(e, "message") else str(e)
             error_status_code: int = (

@@ -1,3 +1,4 @@
+from injector import inject
 from fastapi import APIRouter, HTTPException, Request
 from openai.types.chat.chat_completion import Choice
 
@@ -9,6 +10,7 @@ from core.services.base.open_ai_service_base import OpenAiServiceBase
 
 class OpenAIAPI:
 
+    @inject
     def __init__(self, router: APIRouter, open_ai_service: OpenAiServiceBase):
         self.router = router
         self.open_ai_service = open_ai_service

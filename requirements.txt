@@ -2,3 +2,4 @@ fastapi>=0.115.8
 uvicorn>=0.34.0
 injector>=0.22.0
 openai>=1.64.0
+googletrans>=4.0.2

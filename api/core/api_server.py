@@ -3,21 +3,20 @@ from fastapi import FastAPI, HTTPException, Request, Depends, Security
 from fastapi.security import (
     HTTPBearer,
     HTTPAuthorizationCredentials,
-    OAuth2PasswordBearer,
 )
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
 
-from api.initializer.api_initializer import ApiInitializer
-from api.routes.routes_container import RoutesContainer
-from utils.models.errors.http_error_response_model import HttpErrorResponseModel
-from utils.models.routes.private_routes_model import PrivateRoutesModel
-from utils.models.routes.public_routes_model import PublicRoutesModel
-from utils.models.routes.routes_container_model import RoutesContainerModel
+from api.core.initializer.api_initializer import ApiInitializer
+from api.core.routes.routes_container import RoutesContainer
+from core.data.models.errors.http_error_response_model import HttpErrorResponseModel
+from core.data.models.routes.private_routes_model import PrivateRoutesModel
+from core.data.models.routes.public_routes_model import PublicRoutesModel
+from core.data.models.routes.routes_container_model import RoutesContainerModel
+from core.localization.localizations import Localizations
+from core.services.dependency_injection.services_injector import ServicesInjector
 from utils.messages import messages
 from utils.helpers.consts import API_KEY
-from core.localization.localizations import Localizations
-from core.services.locator.services_injector import ServicesInjector
 
 
 class ApiServer:
@@ -26,7 +25,6 @@ class ApiServer:
         self.app = fast_api
         self.services_injector = services_injector
         self.routers = self.get_routers()
-        self.oauth2 = OAuth2PasswordBearer(tokenUrl="token")
         self.init_api(routers=self.routers)
         self.include_routers(routers=self.routers)
         self.setup_exception_handlers()

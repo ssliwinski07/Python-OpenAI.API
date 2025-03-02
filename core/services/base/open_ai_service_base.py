@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from openai.types.chat.chat_completion import Choice
-from utils.models.open_ai.open_ai_send_message_model import OpenAISendMessageModel
+from core.data.models.open_ai.open_ai_send_message_model import OpenAISendMessageModel
 
 
 class OpenAiServiceBase(ABC):

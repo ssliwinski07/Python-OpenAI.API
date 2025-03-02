@@ -3,7 +3,7 @@ from injector import singleton
 
 from core.services.base.api_key_service_base import ApiKeyServiceBase
 from core.localization.localizations import Localizations
-from utils.models.keys.api_key_model import ApiKeyModel
+from core.data.models.keys.api_key_model import ApiKeyModel
 from utils.messages import messages
 from utils.helpers.consts import API_KEY
 

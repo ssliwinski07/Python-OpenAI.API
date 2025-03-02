@@ -3,8 +3,8 @@ import uvicorn
 from fastapi import FastAPI
 
 from utils.helpers.enums import ServiceType
-from api.api_server import ApiServer
-from core.services.locator.services_injector import ServicesInjector
+from api.core.api_server import ApiServer
+from core.services.dependency_injection.services_injector import ServicesInjector
 from core.localization.localizations import Localizations
 
 
@@ -16,14 +16,10 @@ def main():
     # localization initialization
     Localizations.lang_initialization(lang_code="en")
 
-    # use ServiceType.MOCK to run with mock dependencies and data
-    # use ServiceType.PROD to run with production dependencies and data
-
-    services_injector: ServicesInjector = ServicesInjector(
-        service_type=ServiceType.PROD
-    )
-
+    services_injector: ServicesInjector = ServicesInjector()
     # initializing services
+    # by default it will use production dependencies and data
+    # if you want to use mock dependencies and data, set service_type parameter to ServiceType.MOCK
     services_injector.init()
 
     api_server: ApiServer = ApiServer(

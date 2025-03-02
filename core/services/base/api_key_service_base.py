@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from utils.models.keys.api_key_model import ApiKeyModel
+from core.data.models.keys.api_key_model import ApiKeyModel
 
 
 class ApiKeyServiceBase(ABC):

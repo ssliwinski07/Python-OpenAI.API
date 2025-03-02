@@ -20,7 +20,7 @@ def main():
     # initializing services
     # by default it will use production dependencies and data
     # if you want to use mock dependencies and data, set service_type parameter to ServiceType.MOCK
-    services_injector.init(service_type=ServiceType.MOCK)
+    services_injector.init()
 
     api_server: ApiServer = ApiServer(
         services_injector=services_injector,

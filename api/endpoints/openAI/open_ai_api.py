@@ -7,6 +7,7 @@ from core.exceptions.custom_exception.custom_exception import CustomException
 from core.services.base.open_ai_service_base import OpenAiServiceBase
 from core.services.dependency_injection.services_resolver import ServicesResolver
 from utils.helpers.consts import DEFAULT_ERROR_CODE
+from utils.helpers.enums import ServiceType
 
 
 class OpenAIAPI:
@@ -16,6 +17,9 @@ class OpenAIAPI:
         self.router = router
         self.routes_setup()
 
+    # By default service_type in get_api_key_service method is set to PROD, so PROD service
+    # is being fetched. However, if you want to use mock service, just change service_type parameter
+    # ServicesResolver methods are managing which service should be fetched based on service_type parameter
     def get_open_ai_service(self) -> OpenAiServiceBase:
         return ServicesResolver.get_open_ai_service()
 

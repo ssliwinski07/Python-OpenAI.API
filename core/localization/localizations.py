@@ -7,6 +7,10 @@ class Localizations:
     __language_code: str | None = None
 
     @classmethod
+    def language_code(cls) -> str | None:
+        return cls.__language_code
+
+    @classmethod
     def lang_initialization(cls, lang_code: str) -> None:
         if not cls.__language_code:
             cls.__language_code = lang_code

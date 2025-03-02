@@ -37,3 +37,4 @@ App was build using Python 3.12.2.
 8. To use mock dependencies and data `service_type = ServiceType.MOCK` in `app.py` file - no mock data for openAi services
 9. API app is localized to English by default - error messages are being translated. To change the language, change the `lang_code` parameter of `Localizations.lang_initialization(lang_code="...")` function in `app.py` file - to see changes you need to re-run the app. Supported languages codes: 'pl', 'es', 'en'. If you use unsupported language code, app will use default language.
 10. Localization was made by creating a custom class `Localizations`. I know I could use `gettext` module, but wanted to do this that way, since it's only test API app to show my coding skills.
+11. Added googletrans package to translate errors from openAI, since they are not localized. Googletrans library uses Google Translate Ajax API

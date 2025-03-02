@@ -1,10 +1,8 @@
-from core.services.base.api_key_service_base import ApiKeyServiceBase
-from core.services.base.open_ai_service_base import OpenAiServiceBase
-from core.services.locator.services_injector import ServicesInjector
-from api.keys.api_key_api import ApiKeyApi
-from api.users.users_api import UsersAPI
-from api.openAI.open_ai_api import OpenAIAPI
-from utils.models.routes.routes_container_model import RoutesContainerModel
+from core.services.dependency_injection.services_injector import ServicesInjector
+from core.data.models.routes.routes_container_model import RoutesContainerModel
+from api.endpoints.keys.api_key_api import ApiKeyApi
+from api.endpoints.users.users_api import UsersAPI
+from api.endpoints.openAI.open_ai_api import OpenAIAPI
 
 
 def singleton(cls):
@@ -34,14 +32,8 @@ class ApiInitializer:
             UsersAPI(router=self.routers.private.users)
             OpenAIAPI(
                 router=self.routers.private.open_ai,
-                open_ai_service=self.services_injector.injector().get(
-                    OpenAiServiceBase
-                ),
             )
             ApiKeyApi(
                 router=self.routers.public.api_key,
-                api_key_service=self.services_injector.injector().get(
-                    ApiKeyServiceBase
-                ),
             )
             self.__is_initialized = True

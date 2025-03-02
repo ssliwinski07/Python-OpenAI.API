@@ -1,9 +1,9 @@
 from typing import Optional
 from fastapi import APIRouter, HTTPException
 
-from utils.models.users.user_model import User
-from utils.messages import messages
+from core.data.models.users.user_model import User
 from core.localization.localizations import Localizations
+from utils.messages import messages
 
 
 class UsersAPI:

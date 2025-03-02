@@ -6,7 +6,7 @@ from injector import singleton
 
 from utils.helpers.consts import USER_ROLE, DEFAULT_ERROR_CODE
 from utils.helpers.openai_errors import OPEN_AI_ERRORS
-from utils.models.open_ai.open_ai_send_message_model import OpenAISendMessageModel
+from core.data.models.open_ai.open_ai_send_message_model import OpenAISendMessageModel
 from core.exceptions.custom_exception.custom_exception import CustomException
 from core.services.base.open_ai_service_base import OpenAiServiceBase
 

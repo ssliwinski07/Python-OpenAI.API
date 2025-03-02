@@ -8,7 +8,7 @@ from core.services.main.mock.api_key_service_mock import ApiKeyServiceMock
 from core.services.main.mock.open_ai_service_mock import OpenAiServiceMock
 
 
-class ServiceLocatorModule(Module):
+class ServiceModule(Module):
 
     def configure(self, binder):
         binder.bind(ApiKeyServiceBase, to=ApiKeyService, scope=singleton)
@@ -25,7 +25,7 @@ class ServiceLocatorModule(Module):
         return OpenAiService()
 
 
-class ServiceLocatorMockModule(Module):
+class ServiceMockModule(Module):
 
     def configure(self, binder):
         binder.bind(ApiKeyServiceBase, to=ApiKeyServiceMock, scope=singleton)

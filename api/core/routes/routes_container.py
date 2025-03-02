@@ -1,8 +1,8 @@
 from typing import Sequence, Optional
 from fastapi import APIRouter, Depends
 
-from utils.models.routes.private_routes_model import PrivateRoutesModel
-from utils.models.routes.public_routes_model import PublicRoutesModel
+from core.data.models.routes.private_routes_model import PrivateRoutesModel
+from core.data.models.routes.public_routes_model import PublicRoutesModel
 
 
 class RoutesContainer:

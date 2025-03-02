@@ -1,7 +1,7 @@
 from injector import singleton
 
 from core.services.base.api_key_service_base import ApiKeyServiceBase
-from utils.models.keys.api_key_model import ApiKeyModel
+from core.data.models.keys.api_key_model import ApiKeyModel
 
 
 @singleton

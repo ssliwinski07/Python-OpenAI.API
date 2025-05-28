@@ -15,7 +15,7 @@ class ApiKeyApi:
         self.routes_setup()
 
     # By default service_type in get_api_key_service method is set to PROD, so PROD service
-    # is being fetched. However, if you want to use mock service, just change service_type parameter
+    # is being fetched. However, if you want to use mock service, just change service_type parameter to ServiceType.MOCK
     # ServicesResolver methods are managing which service should be fetched based on service_type parameter
     def get_api_key_service(self) -> ApiKeyServiceBase:
         return ServicesResolver.get_api_key_service()
